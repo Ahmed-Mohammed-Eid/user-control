@@ -1,0 +1,234 @@
+// SignupPage.module.scss
+.body {
+	background-color: #625290;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding: 20px;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.loginContainer {
+	background-color: white;
+	border-radius: 10px;
+	overflow: hidden;
+	width: 100%;
+	max-width: 900px;
+	display: flex;
+	box-shadow: 0 5px 15px rgba(98, 82, 144, 0.3);
+}
+
+.loginForm {
+	flex: 1;
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	position: relative;
+	overflow: hidden;
+
+	h1 {
+		font-size: 24px;
+		margin-bottom: 10px;
+		color: #333;
+	}
+
+	p {
+		color: #666;
+		margin-bottom: 30px;
+		font-size: 16px;
+		line-height: 1.5;
+	}
+}
+
+.stepper {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 30px;
+	gap: 10px;
+}
+
+.step {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	.stepNumber {
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #f1f5f9;
+		color: #888;
+		font-size: 14px;
+		transition: all 0.3s ease;
+
+		&.active {
+			background-color: #625290;
+			color: white;
+		}
+
+		&.completed {
+			background-color: #4caf50;
+			color: white;
+		}
+	}
+
+	.stepLabel {
+		font-size: 14px;
+		color: #888;
+		transition: color 0.3s ease;
+
+		&.active {
+			color: #625290;
+		}
+
+		&.completed {
+			color: #4caf50;
+		}
+	}
+
+	&:not(:last-child)::after {
+		content: "";
+		width: 40px;
+		height: 2px;
+		background-color: #f1f5f9;
+		margin-left: 8px;
+	}
+
+	&.completed:not(:last-child)::after {
+		background-color: #4caf50;
+	}
+}
+
+.formStep {
+	position: absolute;
+	width: 100%;
+	transition: all 0.5s ease;
+	opacity: 0;
+	transform: translateX(100%);
+
+	&.active {
+		position: relative;
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	&.completed {
+		transform: translateX(-100%);
+	}
+}
+
+.loginImage {
+	flex: 1;
+	background-image: url("/gas_station.jpg");
+	background-size: cover;
+	background-position: center;
+	display: none;
+
+	@media (min-width: 768px) {
+		display: block;
+	}
+}
+
+.formRow {
+	display: flex;
+	gap: 20px;
+
+	.formGroup {
+		flex: 1;
+	}
+}
+
+.formGroup {
+	margin-bottom: 20px;
+
+	label {
+		display: block;
+		margin-bottom: 8px;
+		font-size: 14px;
+		color: #555;
+	}
+
+	input {
+		width: 100%;
+		padding: 12px;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		font-size: 14px;
+
+		&:focus {
+			outline: none;
+			border-color: #625290;
+		}
+	}
+
+	.errorMessage {
+		color: #dc3545;
+		font-size: 12px;
+		margin-top: 6px;
+		display: block;
+	}
+}
+
+.signinBtn {
+	background-color: #625290;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	padding: 14px;
+	font-size: 16px;
+	cursor: pointer;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.divider {
+	text-align: center;
+	margin-bottom: 20px;
+	color: #888;
+	position: relative;
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		width: 45%;
+		height: 1px;
+		background-color: #ddd;
+	}
+
+	&::before {
+		left: 0;
+	}
+
+	&::after {
+		right: 0;
+	}
+}
+
+.signupLink {
+	text-align: center;
+	font-size: 14px;
+	color: #555;
+
+	a {
+		color: #1a372a;
+		text-decoration: none;
+		font-weight: bold;
+	}
+}
+
+.copyright {
+	text-align: center;
+	margin-top: 30px;
+	font-size: 12px;
+	color: #888;
+}
