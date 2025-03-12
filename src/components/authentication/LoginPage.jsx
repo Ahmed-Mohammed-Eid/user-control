@@ -1,26 +1,61 @@
 // LoginPage.jsx
-import React from "react";
+import React, { useCallback } from "react";
 import styles from "./LoginPage.module.scss";
 
 // REACT HOOK FORM
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schemas/login-schema";
-import { Link } from "react-router";
+// APIS AND ROUTER
+import { Link, useNavigate } from "react-router";
+import axios from "axios";
+// COMPONENTS
+import Spinner from "../shared/Spinner";
 
 const LoginPage = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
+		setError,
 	} = useForm({
 		resolver: zodResolver(loginSchema),
 	});
 
-	const onSubmit = (data) => {
-		console.log(data);
-		// Handle form submission here
-	};
+	// NAVIGATE
+	const navigate = useNavigate();
+
+	const onSubmit = useCallback(async (data) => {
+		await axios
+			.get(`http://64.251.10.84:8181/ords/charge/login/logim`, {
+				params: {
+					p_username: data.phone.replace("+", ""),
+					p_password: data.password,
+				},
+			})
+			.then((response) => {
+				console.log(response.data);
+				const items = response.data.items;
+				const responseObj = items[0];
+				if (responseObj?.val > 0) {
+					console.log("Login successful");
+					// Redirect to dashboard
+					navigate("/");
+				} else {
+					setError("phone", {
+						type: "manual",
+						message: "Invalid phone number or password",
+					});
+					setError("password", {
+						type: "manual",
+						message: "Invalid phone number or password",
+					});
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}, []);
 
 	return (
 		<div className={styles.body}>
@@ -34,16 +69,16 @@ const LoginPage = () => {
 						</p>
 
 						<div className={styles.formGroup}>
-							<label htmlFor="email">Email</label>
+							<label htmlFor="phone">Phone Number</label>
 							<input
-								{...register("email")}
-								type="email"
-								id="email"
-								placeholder="Example@email.com"
+								{...register("phone")}
+								type="tel"
+								id="phone"
+								placeholder="+20123456789"
 							/>
-							{errors.email && (
+							{errors.phone && (
 								<span className={styles.errorMessage}>
-									{errors.email.message}
+									{errors.phone.message}
 								</span>
 							)}
 						</div>
@@ -69,8 +104,13 @@ const LoginPage = () => {
 							</Link>
 						</div>
 
-						<button type="submit" className={styles.signinBtn}>
-							Sign in
+						<button
+							type="submit"
+							className={styles.signinBtn}
+							disabled={isSubmitting}
+						>
+							{/* {isSubmitting ? "Signing in..." : "Sign in"} */}
+							{isSubmitting ? <Spinner /> : "Sign in"}
 						</button>
 
 						<div className={styles.divider}>Or</div>

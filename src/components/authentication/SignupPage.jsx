@@ -6,16 +6,21 @@ import styles from "./SignupPage.module.scss";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "../../schemas/signup-schema";
+// APIS AND ROUTER
 import { Link, useNavigate } from "react-router";
+// UTILS
 import { generateVerificationCode } from "../../utils/generateCode";
 import { sendWhatsappMessage } from "../../utils/sendWhatsappMessage";
+// COMPONENTS
 import VerificationDialog from "./VerificationDialog";
+import Spinner from "../shared/Spinner";
 
 const SignupPage = () => {
 	// NAVIGATION
 	const navigate = useNavigate();
 
 	const [currentStep, setCurrentStep] = useState(1);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -57,6 +62,87 @@ const SignupPage = () => {
 		}
 	};
 
+	const getStepClass = (step) => {
+		if (step === currentStep) return styles.active;
+		if (step < currentStep) return styles.completed;
+		return "";
+	};
+
+	// HANDLER FOR FORM SUBMISSION
+	const handleGeneratingCodeAndSendToWhatsapp = useCallback((data) => {
+		console.log("Generating code and sending to WhatsApp", data);
+		const code = generateVerificationCode();
+		localStorage.setItem("verificationCode", code);
+		setShowVerification(true);
+
+		// SEND CODE TO WHATSAPP
+		sendWhatsappMessage(data.phone, `Your verification code is: ${code}`);
+	}, []);
+	const handleSigningupUser = useCallback(
+		(data) => {
+			const phoneNumberForWhatsapp = data.phone;
+			const passwordToBeSent = data.password;
+			const body = {
+				EMAIL: data.email,
+				MOBILE: data.phone.replace("+", ""),
+				IS_ACTIVE: "1",
+			};
+
+			if (data.type === "company") {
+				body.COMPANY_NAME_EN = data.companyNameEn;
+				body.COMPANY_NAME_AR = data.companyNameAr;
+				body.USER_PASSWORD = data.password;
+			}
+			if (data.type === "individual") {
+				body.CUSTOMER_NAME_EN = data.fullNameEn;
+				body.CUSTOMER_NAME_AR = data.fullNameAr;
+				body.CUSTOMER_PASSWORD = data.password;
+				body.CREATED_USER = "test";
+				body.COMPANY_ID = "";
+			}
+
+			// SET THE LOADING STATE
+			setIsSubmitting(true);
+
+			fetch(
+				`http://64.251.10.84:8181/ords/charge/api/post_cmp_cust?p_type=${
+					data.type === "individual" ? 1 : 2
+				}`,
+				{
+					method: "POST",
+					body: JSON.stringify({
+						p_json: body,
+					}),
+				}
+			)
+				.then((response) => response.json())
+				.then(() => {
+					// SEND SUCCESS MESSAGE TO USER VIA WHATSAPP TO CONGRATULATE AND SEND THE USER PHONE AS USERNAME AND THE PASSWORD
+					sendWhatsappMessage(
+						phoneNumberForWhatsapp,
+						`Congratulations! Your account has been created successfully. Your username is your phone number and your password is ${passwordToBeSent}.`
+					);
+
+					// RESET THE LOADING STATE
+					setIsSubmitting(false);
+
+					// CLEAR FORM DATA
+					setFormData(null);
+					// CLEAR ERACT HOOK FORM
+					setCurrentStep(1);
+					reset();
+					// NAVIGATE TO LOGIN PAGE
+					navigate("/auth/login");
+				})
+				.catch((error) => {
+					console.error("Error:", error);
+					// RESET THE LOADING STATE
+					setIsSubmitting(false);
+				});
+		},
+		[navigate, reset]
+	);
+
 	const handleVerify = useCallback(
 		(enteredCode) => {
 			const savedCode = localStorage.getItem("verificationCode");
@@ -88,84 +174,12 @@ const SignupPage = () => {
 				console.log("Invalid verification code");
 			}
 		},
-		[formData, styles]
+		[formData, handleSigningupUser]
 	);
 
 	const handleResend = useCallback(() => {
 		handleGeneratingCodeAndSendToWhatsapp(formData);
-	}, []);
-
-	const getStepClass = (step) => {
-		if (step === currentStep) return styles.active;
-		if (step < currentStep) return styles.completed;
-		return "";
-	};
-
-	// HANDLER FOR FORM SUBMISSION
-	const handleGeneratingCodeAndSendToWhatsapp = useCallback((data) => {
-		console.log("Generating code and sending to WhatsApp", data);
-		const code = generateVerificationCode();
-		localStorage.setItem("verificationCode", code);
-		setShowVerification(true);
-
-		// SEND CODE TO WHATSAPP
-		sendWhatsappMessage(data.phone, `Your verification code is: ${code}`);
-	}, []);
-	const handleSigningupUser = useCallback((data) => {
-		const phoneNumberForWhatsapp = data.phone;
-		const passwordToBeSent = data.password;
-		const body = {
-			EMAIL: data.email,
-			MOBILE: data.phone.replace("+", ""),
-			IS_ACTIVE: "1",
-		};
-
-		if (data.type === "company") {
-			body.COMPANY_NAME_EN = data.companyNameEn;
-			body.COMPANY_NAME_AR = data.companyNameAr;
-			body.USER_PASSWORD = data.password;
-		}
-		if (data.type === "individual") {
-			body.CUSTOMER_NAME_EN = data.fullNameEn;
-			body.CUSTOMER_NAME_AR = data.fullNameAr;
-			body.CUSTOMER_PASSWORD = data.password;
-			body.CREATED_USER = "test";
-			body.COMPANY_ID = "";
-		}
-
-		fetch(
-			`http://64.251.10.84:8181/ords/charge/api/post_cmp_cust?p_type=${
-				data.type === "individual" ? 1 : 2
-			}`,
-			{
-				method: "POST",
-				body: JSON.stringify({
-					p_json: body,
-				}),
-			}
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				console.log("Success:", data);
-
-				// SEND SUCCESS MESSAGE TO USER VIA WHATSAPP TO CONGRATULATE AND SEND THE USER PHONE AS USERNAME AND THE PASSWORD
-				sendWhatsappMessage(
-					phoneNumberForWhatsapp,
-					`Congratulations! Your account has been created successfully. Your username is your phone number and your password is ${passwordToBeSent}.`
-				);
-
-				// CLEAR FORM DATA
-				setFormData(null);
-				// CLEAR ERACT HOOK FORM
-				setCurrentStep(1);
-				reset();
-				// NAVIGATE TO LOGIN PAGE
-				navigate("/auth/login");
-			})
-			.catch((error) => {
-				console.error("Error:", error);
-			});
-	}, []);
+	}, [formData, handleGeneratingCodeAndSendToWhatsapp]);
 
 	return (
 		<div className={styles.body}>
@@ -486,8 +500,9 @@ const SignupPage = () => {
 									type="submit"
 									className={styles.signinBtn}
 									style={{ flex: 1 }}
+									disabled={isSubmitting}
 								>
-									Create Account
+									{isSubmitting ? <Spinner /> : "Sign up"}
 								</button>
 							</div>
 						</div>
