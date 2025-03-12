@@ -6,11 +6,15 @@ import styles from "./SignupPage.module.scss";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "../../schemas/signup-schema";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { generateVerificationCode } from "../../utils/generateCode";
+import { sendWhatsappMessage } from "../../utils/sendWhatsappMessage";
 import VerificationDialog from "./VerificationDialog";
 
 const SignupPage = () => {
+	// NAVIGATION
+	const navigate = useNavigate();
+
 	const [currentStep, setCurrentStep] = useState(1);
 	const {
 		register,
@@ -18,6 +22,7 @@ const SignupPage = () => {
 		formState: { errors },
 		watch,
 		trigger,
+		reset,
 	} = useForm({
 		resolver: zodResolver(signupSchema),
 		defaultValues: {
@@ -29,13 +34,14 @@ const SignupPage = () => {
 	const selectedType = watch("type");
 
 	const handleNext = async () => {
-		const isStepValid = await trigger([
-			"type",
-			"companyName",
-			"firstName",
-			"lastName",
-			"phone",
-		]);
+		const fieldsToValidate = ["type", "phone"];
+		if (selectedType === "company") {
+			fieldsToValidate.push("companyNameEn", "companyNameAr");
+		} else {
+			fieldsToValidate.push("fullNameEn", "fullNameAr");
+		}
+
+		const isStepValid = await trigger(fieldsToValidate);
 		if (isStepValid) {
 			setCurrentStep(2);
 		}
@@ -46,10 +52,9 @@ const SignupPage = () => {
 
 	const onSubmitForm = async (data) => {
 		setFormData(data);
-		const code = generateVerificationCode();
-		localStorage.setItem("verificationCode", code);
-		console.log("WhatsApp Message would be sent with code:", code);
-		setShowVerification(true);
+		if (currentStep === 2) {
+			handleGeneratingCodeAndSendToWhatsapp(data);
+		}
 	};
 
 	const handleVerify = useCallback(
@@ -63,18 +68,31 @@ const SignupPage = () => {
 				);
 				localStorage.removeItem("verificationCode");
 				setShowVerification(false);
+				// Reset verification code state
+				const verificationDialog = document.querySelector(
+					`.${styles.dialog}`
+				);
+				if (verificationDialog) {
+					const inputs =
+						verificationDialog.querySelectorAll(
+							'input[type="text"]'
+						);
+					inputs.forEach((input) => (input.value = ""));
+				}
+
+				// HANDLE SIGNING UP USER
+				console.log(formData);
+				handleSigningupUser(formData);
 			} else {
 				// Invalid code
 				console.log("Invalid verification code");
 			}
 		},
-		[formData]
+		[formData, styles]
 	);
 
 	const handleResend = useCallback(() => {
-		const code = generateVerificationCode();
-		localStorage.setItem("verificationCode", code);
-		console.log("Resending code:", code);
+		handleGeneratingCodeAndSendToWhatsapp(formData);
 	}, []);
 
 	const getStepClass = (step) => {
@@ -82,6 +100,72 @@ const SignupPage = () => {
 		if (step < currentStep) return styles.completed;
 		return "";
 	};
+
+	// HANDLER FOR FORM SUBMISSION
+	const handleGeneratingCodeAndSendToWhatsapp = useCallback((data) => {
+		console.log("Generating code and sending to WhatsApp", data);
+		const code = generateVerificationCode();
+		localStorage.setItem("verificationCode", code);
+		setShowVerification(true);
+
+		// SEND CODE TO WHATSAPP
+		sendWhatsappMessage(data.phone, `Your verification code is: ${code}`);
+	}, []);
+	const handleSigningupUser = useCallback((data) => {
+		const phoneNumberForWhatsapp = data.phone;
+		const passwordToBeSent = data.password;
+		const body = {
+			EMAIL: data.email,
+			MOBILE: data.phone.replace("+", ""),
+			IS_ACTIVE: "1",
+		};
+
+		if (data.type === "company") {
+			body.COMPANY_NAME_EN = data.companyNameEn;
+			body.COMPANY_NAME_AR = data.companyNameAr;
+			body.USER_PASSWORD = data.password;
+		}
+		if (data.type === "individual") {
+			body.CUSTOMER_NAME_EN = data.fullNameEn;
+			body.CUSTOMER_NAME_AR = data.fullNameAr;
+			body.CUSTOMER_PASSWORD = data.password;
+			body.CREATED_USER = "test";
+			body.COMPANY_ID = "";
+		}
+
+		fetch(
+			`http://64.251.10.84:8181/ords/charge/api/post_cmp_cust?p_type=${
+				data.type === "individual" ? 1 : 2
+			}`,
+			{
+				method: "POST",
+				body: JSON.stringify({
+					p_json: body,
+				}),
+			}
+		)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("Success:", data);
+
+				// SEND SUCCESS MESSAGE TO USER VIA WHATSAPP TO CONGRATULATE AND SEND THE USER PHONE AS USERNAME AND THE PASSWORD
+				sendWhatsappMessage(
+					phoneNumberForWhatsapp,
+					`Congratulations! Your account has been created successfully. Your username is your phone number and your password is ${passwordToBeSent}.`
+				);
+
+				// CLEAR FORM DATA
+				setFormData(null);
+				// CLEAR ERACT HOOK FORM
+				setCurrentStep(1);
+				reset();
+				// NAVIGATE TO LOGIN PAGE
+				navigate("/auth/login");
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+	}, []);
 
 	return (
 		<div className={styles.body}>
@@ -209,58 +293,107 @@ const SignupPage = () => {
 								)}
 							</div>
 
-							{selectedType === "company" && (
-								<div className={styles.formGroup}>
-									<label htmlFor="companyName">
-										Company Name
-									</label>
-									<input
-										{...register("companyName")}
-										type="text"
-										id="companyName"
-										placeholder="Enter company name"
-									/>
-									{errors.companyName && (
-										<span className={styles.errorMessage}>
-											{errors.companyName.message}
-										</span>
-									)}
-								</div>
+							{selectedType === "company" ? (
+								<>
+									<div className={styles.formRow}>
+										<div className={styles.formGroup}>
+											<label htmlFor="companyNameEn">
+												Company Name (English)
+											</label>
+											<input
+												{...register("companyNameEn")}
+												type="text"
+												id="companyNameEn"
+												placeholder="Enter company name in English"
+											/>
+											{errors.companyNameEn && (
+												<span
+													className={
+														styles.errorMessage
+													}
+												>
+													{
+														errors.companyNameEn
+															.message
+													}
+												</span>
+											)}
+										</div>
+
+										<div className={styles.formGroup}>
+											<label htmlFor="companyNameAr">
+												Company Name (Arabic)
+											</label>
+											<input
+												{...register("companyNameAr")}
+												type="text"
+												id="companyNameAr"
+												placeholder="Enter company name in Arabic"
+												dir="rtl"
+											/>
+											{errors.companyNameAr && (
+												<span
+													className={
+														styles.errorMessage
+													}
+												>
+													{
+														errors.companyNameAr
+															.message
+													}
+												</span>
+											)}
+										</div>
+									</div>
+								</>
+							) : (
+								<>
+									<div className={styles.formRow}>
+										<div className={styles.formGroup}>
+											<label htmlFor="fullNameEn">
+												Full Name (English)
+											</label>
+											<input
+												{...register("fullNameEn")}
+												type="text"
+												id="fullNameEn"
+												placeholder="Enter your full name in English"
+											/>
+											{errors.fullNameEn && (
+												<span
+													className={
+														styles.errorMessage
+													}
+												>
+													{errors.fullNameEn.message}
+												</span>
+											)}
+										</div>
+
+										<div className={styles.formGroup}>
+											<label htmlFor="fullNameAr">
+												Full Name (Arabic)
+											</label>
+											<input
+												{...register("fullNameAr")}
+												type="text"
+												id="fullNameAr"
+												placeholder="Enter your full name in Arabic"
+												dir="rtl"
+											/>
+											{errors.fullNameAr && (
+												<span
+													className={
+														styles.errorMessage
+													}
+												>
+													{errors.fullNameAr.message}
+												</span>
+											)}
+										</div>
+									</div>
+								</>
 							)}
-
-							<div className={styles.formRow}>
-								<div className={styles.formGroup}>
-									<label htmlFor="firstName">
-										First Name
-									</label>
-									<input
-										{...register("firstName")}
-										type="text"
-										id="firstName"
-										placeholder="Enter your first name"
-									/>
-									{errors.firstName && (
-										<span className={styles.errorMessage}>
-											{errors.firstName.message}
-										</span>
-									)}
-								</div>
-
-								<div className={styles.formGroup}>
-									<label htmlFor="lastName">Last Name</label>
-									<input
-										{...register("lastName")}
-										type="text"
-										id="lastName"
-										placeholder="Enter your last name"
-									/>
-									{errors.lastName && (
-										<span className={styles.errorMessage}>
-											{errors.lastName.message}
-										</span>
-									)}
-								</div>
-							</div>
 
 							<div className={styles.formGroup}>
 								<label htmlFor="phone">Phone Number</label>

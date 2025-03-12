@@ -5,23 +5,14 @@ export const signupSchema = z
 		type: z.enum(["individual", "company"], {
 			required_error: "Please select account type",
 		}),
-		companyName: z.string().optional(),
-		firstName: z
-			.string()
-			.min(1, { message: "First name is required" })
-			.regex(/^[a-zA-Z\s]*$/, {
-				message: "First name should only contain letters",
-			}),
-		lastName: z
-			.string()
-			.min(1, { message: "Last name is required" })
-			.regex(/^[a-zA-Z\s]*$/, {
-				message: "Last name should only contain letters",
-			}),
+		companyNameEn: z.string().optional(),
+		companyNameAr: z.string().optional(),
+		fullNameEn: z.string().optional(),
+		fullNameAr: z.string().optional(),
 		phone: z
 			.string()
 			.min(1, { message: "Phone number is required" })
-			.regex(/^\+?[1-9]\d{1,14}$/, { message: "Invalid phone number" }),
+			.regex(/^\+?[0-9]{10,}$/, { message: "Invalid phone number" }),
 		email: z
 			.string()
 			.min(1, { message: "Email is required" })
@@ -40,12 +31,36 @@ export const signupSchema = z
 	.refine(
 		(data) => {
 			if (data.type === "company") {
-				return data.companyName && data.companyName.length > 0;
+				return (
+					data.companyNameEn &&
+					data.companyNameEn.length > 0 &&
+					data.companyNameAr &&
+					data.companyNameAr.length > 0
+				);
 			}
 			return true;
 		},
 		{
-			message: "Company name is required for company accounts",
-			path: ["companyName"],
+			message:
+				"Company names in English and Arabic are required for company accounts",
+			path: ["companyNameEn", "companyNameAr"],
+		}
+	)
+	.refine(
+		(data) => {
+			if (data.type === "individual") {
+				return (
+					data.fullNameEn &&
+					data.fullNameEn.length > 0 &&
+					data.fullNameAr &&
+					data.fullNameAr.length > 0
+				);
+			}
+			return true;
+		},
+		{
+			message:
+				"Full names in English and Arabic are required for individual accounts",
+			path: ["fullNameEn", "fullNameAr"],
 		}
 	);

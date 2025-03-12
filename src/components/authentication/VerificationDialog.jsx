@@ -35,6 +35,8 @@ const VerificationDialog = ({ isOpen, onVerify, onResend, phone }) => {
 		}
 		setError("");
 		onVerify(code);
+		// Reset verification code state
+		setCode("");
 	}, [code, onVerify]);
 
 	const formatTime = (seconds) => {
