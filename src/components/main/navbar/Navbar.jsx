@@ -17,6 +17,10 @@ const Navbar = () => {
 	const redirectToHome = useCallback(() => {
 		navigate("/");
 	}, [navigate]);
+	// REDIRECT TO LOGIN PAGE FUNCTION
+	const redirectToLogin = useCallback(() => {
+		navigate("/auth/login");
+	}, [navigate]);
 
 	const toggleProfileMenu = (e) => {
 		e.stopPropagation();
@@ -244,7 +248,10 @@ const Navbar = () => {
 						</div>
 					</div>
 					<div className={styles.profileMenuFooter}>
-						<div className={styles.logoutButton}>
+						<div
+							className={styles.logoutButton}
+							onClick={redirectToLogin}
+						>
 							<span className={styles.logoutButtonIcon}>
 								<svg
 									viewBox="0 0 24 24"
