@@ -1,5 +1,5 @@
 import React from "react";
-import UpdateUserForm from "../../components/main/updateUserForm/updateUserForm";
+import UpdateUserForm from "../../components/main/updateUserForm/UpdateUserForm";
 // STYLES
 import classes from "./updateUser.module.scss";
 
