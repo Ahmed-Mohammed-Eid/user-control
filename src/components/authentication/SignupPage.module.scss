@@ -1,6 +1,8 @@
 // SignupPage.module.scss
 .body {
-	background-color: #625290;
+	// background-color: #625290;
+	background: linear-gradient(135deg, #f5f7fa 0%, #e8e4f3 100%);
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -15,7 +17,7 @@
 .loginContainer {
 	background-color: white;
 	border-radius: 10px;
-	overflow: hidden;
+	// overflow: hidden;
 	width: 100%;
 	max-width: 900px;
 	display: flex;
@@ -131,6 +133,7 @@
 	background-size: cover;
 	background-position: center;
 	display: none;
+	border-radius: 0 10px 10px 0;
 
 	@media (min-width: 768px) {
 		display: block;

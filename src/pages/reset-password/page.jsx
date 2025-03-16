@@ -1,19 +1,24 @@
 import React, { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import styles from "../../components/authentication/LoginPage.module.scss";
 import VerificationDialog from "../../components/authentication/VerificationDialog";
 import { generateVerificationCode } from "../../utils/generateCode";
+import { sendWhatsappMessage } from "../../utils/sendWhatsappMessage";
 import {
 	resetPasswordPhoneSchema,
 	resetPasswordSchema,
 } from "../../schemas/reset-password-schema";
+import axios from "axios";
 
 const ResetPassword = () => {
 	const [step, setStep] = useState("phone"); // phone, verification, reset
 	const [phone, setPhone] = useState("");
 	const [showVerification, setShowVerification] = useState(false);
+
+	// ROUTER
+	const navigate = useNavigate();
 
 	const {
 		register: registerPhone,
@@ -34,10 +39,18 @@ const ResetPassword = () => {
 	});
 
 	const onPhoneSubmit = (data) => {
+		console.log("Phone number submitted", data);
 		setPhone(data.phone);
 		const code = generateVerificationCode();
+		sendWhatsappMessage(data.phone, `Your verification code is: ${code}`);
+
+		// SAVE DATA TO LOCAL STORAGE
+		// #1) Save the phone number
+		localStorage.setItem("resetPasswordPhone", data.phone);
+		// #2) Save the verification code
 		localStorage.setItem("resetPasswordCode", code);
-		console.log("WhatsApp Message would be sent with code:", code);
+
+		// Move to the next step
 		setShowVerification(true);
 	};
 
@@ -55,12 +68,39 @@ const ResetPassword = () => {
 	const handleResend = useCallback(() => {
 		const code = generateVerificationCode();
 		localStorage.setItem("resetPasswordCode", code);
-		console.log("Resending code:", code);
-	}, []);
+		sendWhatsappMessage(
+			phone,
+			`Your verification code to reset your password is: ${code}`
+		);
+	}, [phone]);
 
 	const onResetSubmit = (data) => {
 		console.log("Password reset successful", data);
 		// Here you would typically make an API call to update the password
+		axios
+			.put(
+				"http://64.251.10.84:8181/ords/charge/change_password/change_password",
+				{},
+				{
+					params: {
+						p_username: phone.replace("+", ""),
+						p_pass: data.password,
+					},
+				}
+			)
+			.then((response) => {
+				console.log(response);
+
+				// Clear the phone number from local storage
+				localStorage.removeItem("resetPasswordPhone");
+				// CLEAR THE  CODE FROM LOCAL STORAGE
+				localStorage.removeItem("resetPasswordCode");
+				// Redirect to the login page
+				navigate("/auth/login");
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
 	return (

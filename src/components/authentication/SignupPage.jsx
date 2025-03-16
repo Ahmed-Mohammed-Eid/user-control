@@ -14,11 +14,13 @@ import { sendWhatsappMessage } from "../../utils/sendWhatsappMessage";
 // COMPONENTS
 import VerificationDialog from "./VerificationDialog";
 import Spinner from "../shared/Spinner";
+import PhoneInput from "../shared/PhoneInput/PhoneInput";
 
 const SignupPage = () => {
 	// NAVIGATION
 	const navigate = useNavigate();
 
+	const [countryCode, setCountryCode] = useState("+966");
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const {
@@ -28,6 +30,7 @@ const SignupPage = () => {
 		watch,
 		trigger,
 		reset,
+		setError,
 	} = useForm({
 		resolver: zodResolver(signupSchema),
 		defaultValues: {
@@ -44,6 +47,14 @@ const SignupPage = () => {
 			fieldsToValidate.push("companyNameEn", "companyNameAr");
 		} else {
 			fieldsToValidate.push("fullNameEn", "fullNameAr");
+		}
+
+		// VALIDATE THE COUNTRY CODE
+		if (!countryCode) {
+			setError("phone", {
+				type: "manual",
+				message: "Please select a country code",
+			});
 		}
 
 		const isStepValid = await trigger(fieldsToValidate);
@@ -69,22 +80,32 @@ const SignupPage = () => {
 	};
 
 	// HANDLER FOR FORM SUBMISSION
-	const handleGeneratingCodeAndSendToWhatsapp = useCallback((data) => {
-		console.log("Generating code and sending to WhatsApp", data);
-		const code = generateVerificationCode();
-		localStorage.setItem("verificationCode", code);
-		setShowVerification(true);
+	const handleGeneratingCodeAndSendToWhatsapp = useCallback(
+		(data) => {
+			console.log("Generating code and sending to WhatsApp", data);
+			const code = generateVerificationCode();
+			localStorage.setItem("verificationCode", code);
+			setShowVerification(true);
 
-		// SEND CODE TO WHATSAPP
-		sendWhatsappMessage(data.phone, `Your verification code is: ${code}`);
-	}, []);
+			// PHONE WITH COUNTRY CODE
+			const countryPhone = `${countryCode}${data.phone.replace("+", "")}`;
+			console.log("Country phone:", countryPhone);
+
+			// SEND CODE TO WHATSAPP
+			sendWhatsappMessage(
+				countryPhone,
+				`Your verification code is: ${code}`
+			);
+		},
+		[countryCode]
+	);
 	const handleSigningupUser = useCallback(
 		(data) => {
 			const phoneNumberForWhatsapp = data.phone;
 			const passwordToBeSent = data.password;
 			const body = {
 				EMAIL: data.email,
-				MOBILE: data.phone.replace("+", ""),
+				MOBILE: `${countryCode}${data.phone.replace("+", "")}`,
 				IS_ACTIVE: "1",
 			};
 
@@ -117,9 +138,17 @@ const SignupPage = () => {
 			)
 				.then((response) => response.json())
 				.then(() => {
+					// COUNTRY PHONE
+					const countryPhone = `${countryCode}${phoneNumberForWhatsapp.replace(
+						"+",
+						""
+					)}`;
+
+					console.log("countryPhone", countryPhone);
+
 					// SEND SUCCESS MESSAGE TO USER VIA WHATSAPP TO CONGRATULATE AND SEND THE USER PHONE AS USERNAME AND THE PASSWORD
 					sendWhatsappMessage(
-						phoneNumberForWhatsapp,
+						countryPhone,
 						`Congratulations! Your account has been created successfully. Your username is your phone number and your password is ${passwordToBeSent}.`
 					);
 
@@ -140,7 +169,7 @@ const SignupPage = () => {
 					setIsSubmitting(false);
 				});
 		},
-		[navigate, reset]
+		[navigate, reset, countryCode]
 	);
 
 	const handleVerify = useCallback(
@@ -180,6 +209,14 @@ const SignupPage = () => {
 	const handleResend = useCallback(() => {
 		handleGeneratingCodeAndSendToWhatsapp(formData);
 	}, [formData, handleGeneratingCodeAndSendToWhatsapp]);
+
+	// HANDLE COUNTRY CODE CHANGE
+	const handleCountryCode = useCallback((code) => {
+		// Update the country code state
+		setCountryCode(code);
+		// Log the change
+		console.log("Country code changed to:", code);
+	}, []);
 
 	return (
 		<div className={styles.body}>
@@ -232,7 +269,7 @@ const SignupPage = () => {
 							onClose={() => setShowVerification(false)}
 							onVerify={handleVerify}
 							onResend={handleResend}
-							phone={formData?.phone}
+							phone={`${countryCode}${formData?.phone}`}
 						/>
 
 						<div
@@ -411,17 +448,12 @@ const SignupPage = () => {
 
 							<div className={styles.formGroup}>
 								<label htmlFor="phone">Phone Number</label>
-								<input
-									{...register("phone")}
-									type="tel"
-									id="phone"
-									placeholder="+201234567890"
+								<PhoneInput
+									register={register}
+									errors={errors}
+									setCountryCodeAtParent={handleCountryCode}
+									countryCode={countryCode}
 								/>
-								{errors.phone && (
-									<span className={styles.errorMessage}>
-										{errors.phone.message}
-									</span>
-								)}
 							</div>
 
 							<button

@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+.card {
+	width: 280px;
+	min-width: 280px;
+	background-color: white;
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+	font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.profileSection {
+	padding: 24px;
+	text-align: center;
+}
+
+.profileImageContainer {
+	position: relative;
+	width: 90px;
+	height: 90px;
+	margin: 0 auto 20px;
+	padding: 4px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #5442ff 0%, #ca7df9 100%);
+	box-shadow: 0 4px 10px rgba(84, 66, 255, 0.2);
+}
+
+.profileImageWrapper {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 3px solid white;
+}
+
+.profileImage {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	background-color: #ff9a9e;
+	transition: transform 0.3s ease;
+
+	&:hover {
+		transform: scale(1.05);
+	}
+}
+
+.verificationBadge {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 24px;
+	height: 24px;
+	background: linear-gradient(135deg, #5442ff 0%, #ca7df9 100%);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+	svg {
+		width: 14px;
+		height: 14px;
+		fill: white;
+	}
+}
+
+.userName {
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.balance {
+	font-size: 24px;
+	font-weight: 700;
+	color: #333;
+	margin-bottom: 8px;
+}
+
+.balanceLabel {
+	font-size: 13px;
+	color: #888;
+	margin-bottom: 24px;
+}
+
+.buttonRow {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.actionButton {
+	width: 50px;
+	height: 50px;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	border: none;
+	background-color: #f5f5f5;
+
+	&:hover {
+		background-color: #eaeaea;
+		transform: translateY(-2px);
+	}
+
+	svg {
+		width: 20px;
+		height: 20px;
+		color: #555;
+	}
+
+	&.primary {
+		background: linear-gradient(135deg, #5442ff 0%, #ca7df9 100%);
+		box-shadow: 0 4px 8px rgba(84, 66, 255, 0.2);
+
+		svg {
+			color: white;
+		}
+
+		&:hover {
+			background: linear-gradient(135deg, #5442ff 0%, #ca7df9 100%);
+			opacity: 0.9;
+			box-shadow: 0 6px 12px rgba(84, 66, 255, 0.3);
+		}
+	}
+}
+
+.buttonLabels {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+}
+
+.buttonLabel {
+	width: 50px;
+	font-size: 12px;
+	text-align: center;
+	color: #666;
+	font-weight: 500;
+}

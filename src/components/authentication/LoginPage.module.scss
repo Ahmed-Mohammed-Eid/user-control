@@ -1,6 +1,8 @@
 // LoginPage.module.scss
 .body {
-	background-color: #625290;
+	// background-color: #625290;
+	background-image: url("/texture.png"),
+		linear-gradient(135deg, #f5f7fa 0%, #e8e4f3 100%); // Adjust the path as needed
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -49,6 +51,7 @@
 	background-size: cover;
 	background-position: center;
 	display: none;
+	border-radius: 0 10px 10px 0;
 
 	@media (min-width: 768px) {
 		display: block;

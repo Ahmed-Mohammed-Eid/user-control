@@ -34,13 +34,24 @@ const LoginPage = () => {
 				},
 			})
 			.then((response) => {
-				console.log(response.data);
+				// SAVE THE USER PHONE NUMBER IN LOCAL STORAGE
+				localStorage.setItem("userId", data.phone);
+
 				const items = response.data.items;
 				const responseObj = items[0];
 				if (responseObj?.val > 0) {
-					console.log("Login successful");
-					// Redirect to dashboard
-					navigate("/");
+					// LOGIN FLAGE 1 || 0 (1: TO MAIN PAGE, 0: TO CHANGE PASSWORD PAGE)
+					const loginFlag = responseObj.login_flag;
+					// SAVE THE LOGIN FLAG IN LOCAL STORAGE
+					localStorage.setItem("loginFlag", responseObj.login_flag);
+					// VALIDATION
+					if (loginFlag === 0) {
+						// NAVIGATE TO CHANGE PASSWORD PAGE
+						navigate("/auth/change-password");
+					} else {
+						// NAVIGATE TO MAIN PAGE
+						navigate("/");
+					}
 				} else {
 					setError("phone", {
 						type: "manual",

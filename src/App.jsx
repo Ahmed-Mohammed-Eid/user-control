@@ -9,6 +9,13 @@ import ResetPassword from "./pages/reset-password/page";
 
 // #2) HOME
 import Home from "./pages/home/page";
+import ChangePassword from "./pages/change-password/page";
+import UpdateUserForm from "./pages/update-user-form/page";
+import InsertEmployeesPage from "./pages/insert-employees/page";
+
+// #3) LAYOUT
+import CanvasCursor from "./components/shared/CanvasCursor";
+
 // STYLES
 import "./App.css";
 
@@ -25,8 +32,18 @@ function App() {
 						path="/auth/reset-password"
 						element={<ResetPassword />}
 					/>
+					<Route
+						path="/auth/change-password"
+						element={<ChangePassword />}
+					/>
+					<Route path="/update-user" element={<UpdateUserForm />} />
+					<Route
+						path="/insert-employees"
+						element={<InsertEmployeesPage />}
+					/>
 				</Routes>
 			</HashRouter>
+			<CanvasCursor />
 		</>
 	);
 }
