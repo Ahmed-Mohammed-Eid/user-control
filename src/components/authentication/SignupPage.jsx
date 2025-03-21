@@ -220,8 +220,18 @@ const SignupPage = () => {
 
 	return (
 		<div className={styles.body}>
+			<div className={styles.floatingShape1}></div>
+			<div className={styles.floatingShape2}></div>
+			<div className={styles.floatingShape3}></div>
 			<div className={styles.loginContainer}>
 				<div className={styles.loginForm}>
+					<div className={styles.logoContainer}>
+						<img
+							src="/logo.png"
+							alt="Company Logo"
+							className={styles.logo}
+						/>
+					</div>
 					<form onSubmit={handleSubmit(onSubmitForm)}>
 						<h1>Create Account 🚀</h1>
 						<p>
@@ -295,7 +305,7 @@ const SignupPage = () => {
 											cursor: "pointer",
 											backgroundColor:
 												selectedType === "individual"
-													? "#625290"
+													? "#0875b7"
 													: "white",
 											color:
 												selectedType === "individual"
@@ -320,7 +330,7 @@ const SignupPage = () => {
 											cursor: "pointer",
 											backgroundColor:
 												selectedType === "company"
-													? "#625290"
+													? "#0875b7"
 													: "white",
 											color:
 												selectedType === "company"

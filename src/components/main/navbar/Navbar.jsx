@@ -5,6 +5,9 @@ import styles from "./Navbar.module.scss";
 // REACT ROUTER
 import { useNavigate } from "react-router";
 
+// Import fonts
+import "../../../styles/fonts.css";
+
 const Navbar = () => {
 	const [isProfileMenuActive, setProfileMenuActive] = useState(false);
 	const profileMenuRef = useRef(null);

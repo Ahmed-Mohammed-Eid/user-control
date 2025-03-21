@@ -1,6 +1,9 @@
 import React from "react";
 import styles from "./page.module.scss";
 
+// Import fonts
+import "../../styles/fonts.css";
+
 // Home page component
 import Navbar from "../../components/main/navbar/Navbar";
 import UserProfileCard from "../../components/main/usercard/UserCard";

@@ -5,6 +5,8 @@ import useExcelReader from "../../../hooks/useExcelReader";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { employeeSchema } from "../../../schemas/employee-schema";
+// CUSTOM COMPONENTS
+import PhoneInput from "./PhoneInput";
 
 const InsertEmployees = ({ onSubmit }) => {
 	// Use React Hook Form with Zod validation
@@ -22,6 +24,8 @@ const InsertEmployees = ({ onSubmit }) => {
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
 		useState(false);
+	// State for country code
+	const [countryCode, setCountryCode] = useState("+966");
 
 	// Refs for file upload
 	const fileInputRef = useRef(null);
@@ -104,6 +108,12 @@ const InsertEmployees = ({ onSubmit }) => {
 			setUploadStatus("Reading file...");
 		}
 	}, [loading]);
+
+	// Handle country code change
+	const handleCountryCodeChange = (code) => {
+		setCountryCode(code);
+		console.log("Country code changed to:", code);
+	};
 
 	// Handle template download
 	const handleDownloadTemplate = () => {
@@ -250,13 +260,14 @@ const InsertEmployees = ({ onSubmit }) => {
 							onSubmit={handleSubmit(onFormSubmit)}
 							className={styles.form}
 						>
+							{/* Names Row */}
 							<div className={styles.formRow}>
 								<div className={styles.inputGroup}>
 									<label
-										htmlFor="firstName"
+										htmlFor="fullNameEn"
 										className={styles.inputLabel}
 									>
-										First Name
+										Full Name (English)
 									</label>
 									<div className={styles.inputWithIcon}>
 										<svg
@@ -272,26 +283,26 @@ const InsertEmployees = ({ onSubmit }) => {
 											></circle>
 										</svg>
 										<input
-											{...register("firstName")}
+											{...register("fullNameEn")}
 											type="text"
-											id="firstName"
+											id="fullNameEn"
 											className={styles.inputField}
-											placeholder="Enter first name"
+											placeholder="Enter full name in English"
 										/>
 									</div>
-									{errors.firstName && (
+									{errors.fullNameEn && (
 										<span className={styles.errorMessage}>
-											{errors.firstName.message}
+											{errors.fullNameEn.message}
 										</span>
 									)}
 								</div>
 
 								<div className={styles.inputGroup}>
 									<label
-										htmlFor="lastName"
+										htmlFor="fullNameAr"
 										className={styles.inputLabel}
 									>
-										Last Name
+										Full Name (Arabic)
 									</label>
 									<div className={styles.inputWithIcon}>
 										<svg
@@ -307,239 +318,243 @@ const InsertEmployees = ({ onSubmit }) => {
 											></circle>
 										</svg>
 										<input
-											{...register("lastName")}
+											{...register("fullNameAr")}
 											type="text"
-											id="lastName"
+											id="fullNameAr"
 											className={styles.inputField}
-											placeholder="Enter last name"
+											placeholder="Enter full name in Arabic"
+											dir="rtl"
 										/>
 									</div>
-									{errors.lastName && (
+									{errors.fullNameAr && (
 										<span className={styles.errorMessage}>
-											{errors.lastName.message}
+											{errors.fullNameAr.message}
 										</span>
 									)}
 								</div>
 							</div>
 
-							<div className={styles.formRow}>
-								<div className={styles.inputGroup}>
-									<label
-										htmlFor="email"
-										className={styles.inputLabel}
+							{/* Email Row */}
+							<div className={styles.inputGroup}>
+								<label
+									htmlFor="email"
+									className={styles.inputLabel}
+								>
+									Email
+								</label>
+								<div className={styles.inputWithIcon}>
+									<svg
+										className={styles.inputIcon}
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
 									>
-										Email
-									</label>
-									<div className={styles.inputWithIcon}>
-										<svg
-											className={styles.inputIcon}
-											viewBox="0 0 24 24"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-											<polyline points="22,6 12,13 2,6"></polyline>
-										</svg>
-										<input
-											{...register("email")}
-											type="email"
-											id="email"
-											className={styles.inputField}
-											placeholder="Enter email address"
-										/>
-									</div>
-									{errors.email && (
-										<span className={styles.errorMessage}>
-											{errors.email.message}
-										</span>
-									)}
+										<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+										<polyline points="22,6 12,13 2,6"></polyline>
+									</svg>
+									<input
+										{...register("email")}
+										type="email"
+										id="email"
+										className={styles.inputField}
+										placeholder="Enter email address"
+									/>
 								</div>
-
-								<div className={styles.inputGroup}>
-									<label
-										htmlFor="mobile"
-										className={styles.inputLabel}
-									>
-										Mobile
-									</label>
-									<div className={styles.inputWithIcon}>
-										<svg
-											className={styles.inputIcon}
-											viewBox="0 0 24 24"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-										</svg>
-										<input
-											{...register("mobile")}
-											type="tel"
-											id="mobile"
-											className={styles.inputField}
-											placeholder="Enter mobile number"
-										/>
-									</div>
-									{errors.mobile && (
-										<span className={styles.errorMessage}>
-											{errors.mobile.message}
-										</span>
-									)}
-								</div>
+								{errors.email && (
+									<span className={styles.errorMessage}>
+										{errors.email.message}
+									</span>
+								)}
 							</div>
 
-							<div className={styles.formRow}>
-								<div className={styles.inputGroup}>
-									<label
-										htmlFor="password"
-										className={styles.inputLabel}
-									>
-										Password
-									</label>
-									<div className={styles.inputWithIcon}>
-										<svg
-											className={styles.inputIcon}
-											viewBox="0 0 24 24"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<rect
-												x="3"
-												y="11"
-												width="18"
-												height="11"
-												rx="2"
-												ry="2"
-											></rect>
-											<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-										</svg>
-										<input
-											{...register("password")}
-											type={
-												isPasswordVisible
-													? "text"
-													: "password"
-											}
-											id="password"
-											className={styles.inputField}
-											placeholder="Enter password"
-										/>
-										<button
-											type="button"
-											className={styles.passwordToggle}
-											onClick={() =>
-												setIsPasswordVisible(
-													!isPasswordVisible
-												)
-											}
-										>
-											{isPasswordVisible ? (
-												<svg
-													viewBox="0 0 24 24"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-													<circle
-														cx="12"
-														cy="12"
-														r="3"
-													></circle>
-												</svg>
-											) : (
-												<svg
-													viewBox="0 0 24 24"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-													<line
-														x1="1"
-														y1="1"
-														x2="23"
-														y2="23"
-													></line>
-												</svg>
-											)}
-										</button>
-									</div>
-									{errors.password && (
-										<span className={styles.errorMessage}>
-											{errors.password.message}
-										</span>
-									)}
-								</div>
+							{/* Phone Row */}
+							<div
+								className={`${styles.inputGroup} ${styles.phoneInputGroup}`}
+							>
+								<label
+									htmlFor="mobile"
+									className={styles.inputLabel}
+								>
+									Mobile
+								</label>
+								<PhoneInput
+									register={register}
+									errors={errors}
+									value={countryCode}
+									onChange={handleCountryCodeChange}
+								/>
+								{errors.mobile && (
+									<span className={styles.errorMessage}>
+										{errors.mobile.message}
+									</span>
+								)}
+							</div>
 
-								<div className={styles.inputGroup}>
-									<label
-										htmlFor="confirmPassword"
-										className={styles.inputLabel}
-									>
-										Confirm Password
-									</label>
-									<div className={styles.inputWithIcon}>
-										<svg
-											className={styles.inputIcon}
-											viewBox="0 0 24 24"
-											xmlns="http://www.w3.org/2000/svg"
+							{/* Password Fields */}
+							<div className={styles.passwordFields}>
+								<div className={styles.formRow}>
+									<div className={styles.inputGroup}>
+										<label
+											htmlFor="password"
+											className={styles.inputLabel}
 										>
-											<rect
-												x="3"
-												y="11"
-												width="18"
-												height="11"
-												rx="2"
-												ry="2"
-											></rect>
-											<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-										</svg>
-										<input
-											{...register("confirmPassword")}
-											type={
-												isConfirmPasswordVisible
-													? "text"
-													: "password"
-											}
-											id="confirmPassword"
-											className={styles.inputField}
-											placeholder="Confirm password"
-										/>
-										<button
-											type="button"
-											className={styles.passwordToggle}
-											onClick={() =>
-												setIsConfirmPasswordVisible(
-													!isConfirmPasswordVisible
-												)
-											}
-										>
-											{isConfirmPasswordVisible ? (
-												<svg
-													viewBox="0 0 24 24"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-													<circle
-														cx="12"
-														cy="12"
-														r="3"
-													></circle>
-												</svg>
-											) : (
-												<svg
-													viewBox="0 0 24 24"
-													xmlns="http://www.w3.org/2000/svg"
-												>
-													<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-													<line
-														x1="1"
-														y1="1"
-														x2="23"
-														y2="23"
-													></line>
-												</svg>
-											)}
-										</button>
+											Password
+										</label>
+										<div className={styles.inputWithIcon}>
+											<svg
+												className={styles.inputIcon}
+												viewBox="0 0 24 24"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<rect
+													x="3"
+													y="11"
+													width="18"
+													height="11"
+													rx="2"
+													ry="2"
+												></rect>
+												<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+											</svg>
+											<input
+												{...register("password")}
+												type={
+													isPasswordVisible
+														? "text"
+														: "password"
+												}
+												id="password"
+												className={styles.inputField}
+												placeholder="Enter password"
+											/>
+											<button
+												type="button"
+												className={
+													styles.passwordToggle
+												}
+												onClick={() =>
+													setIsPasswordVisible(
+														!isPasswordVisible
+													)
+												}
+											>
+												{isPasswordVisible ? (
+													<svg
+														viewBox="0 0 24 24"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+														<circle
+															cx="12"
+															cy="12"
+															r="3"
+														></circle>
+													</svg>
+												) : (
+													<svg
+														viewBox="0 0 24 24"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+														<line
+															x1="1"
+															y1="1"
+															x2="23"
+															y2="23"
+														></line>
+													</svg>
+												)}
+											</button>
+										</div>
+										{errors.password && (
+											<span
+												className={styles.errorMessage}
+											>
+												{errors.password.message}
+											</span>
+										)}
 									</div>
-									{errors.confirmPassword && (
-										<span className={styles.errorMessage}>
-											{errors.confirmPassword.message}
-										</span>
-									)}
+
+									<div className={styles.inputGroup}>
+										<label
+											htmlFor="confirmPassword"
+											className={styles.inputLabel}
+										>
+											Confirm Password
+										</label>
+										<div className={styles.inputWithIcon}>
+											<svg
+												className={styles.inputIcon}
+												viewBox="0 0 24 24"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<rect
+													x="3"
+													y="11"
+													width="18"
+													height="11"
+													rx="2"
+													ry="2"
+												></rect>
+												<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+											</svg>
+											<input
+												{...register("confirmPassword")}
+												type={
+													isConfirmPasswordVisible
+														? "text"
+														: "password"
+												}
+												id="confirmPassword"
+												className={styles.inputField}
+												placeholder="Confirm password"
+											/>
+											<button
+												type="button"
+												className={
+													styles.passwordToggle
+												}
+												onClick={() =>
+													setIsConfirmPasswordVisible(
+														!isConfirmPasswordVisible
+													)
+												}
+											>
+												{isConfirmPasswordVisible ? (
+													<svg
+														viewBox="0 0 24 24"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+														<circle
+															cx="12"
+															cy="12"
+															r="3"
+														></circle>
+													</svg>
+												) : (
+													<svg
+														viewBox="0 0 24 24"
+														xmlns="http://www.w3.org/2000/svg"
+													>
+														<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+														<line
+															x1="1"
+															y1="1"
+															x2="23"
+															y2="23"
+														></line>
+													</svg>
+												)}
+											</button>
+										</div>
+										{errors.confirmPassword && (
+											<span
+												className={styles.errorMessage}
+											>
+												{errors.confirmPassword.message}
+											</span>
+										)}
+									</div>
 								</div>
 							</div>
 

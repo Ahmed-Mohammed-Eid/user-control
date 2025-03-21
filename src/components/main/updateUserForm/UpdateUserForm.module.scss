@@ -6,7 +6,7 @@
 	background-color: white;
 	border-radius: 16px;
 	overflow: hidden;
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 15px 30px rgba(8, 117, 183, 0.15);
 	font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
 		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 	margin: 0 auto;
@@ -23,8 +23,8 @@
 	margin: 0 auto 20px;
 	padding: 4px;
 	border-radius: 50%;
-	background: linear-gradient(135deg, #5442ff 0%, #ca7df9 100%);
-	box-shadow: 0 4px 10px rgba(84, 66, 255, 0.2);
+	background: linear-gradient(135deg, #0875b7 0%, #00b1eb 100%);
+	box-shadow: 0 4px 10px rgba(0, 177, 235, 0.25);
 	cursor: pointer;
 }
 
@@ -40,7 +40,7 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	background-color: #ff9a9e;
+	background-color: #e0f0fa;
 	transition: transform 0.3s ease;
 }
 
@@ -50,13 +50,13 @@
 	right: 0;
 	width: 24px;
 	height: 24px;
-	background: linear-gradient(135deg, #5442ff 0%, #ca7df9 100%);
+	background: linear-gradient(135deg, #0875b7 0%, #00b1eb 100%);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border: 2px solid white;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 10px rgba(0, 177, 235, 0.25);
 
 	svg {
 		width: 14px;
@@ -67,10 +67,11 @@
 
 .formTitle {
 	font-size: 22px;
-	font-weight: 600;
+	font-weight: 700;
 	margin-bottom: 24px;
 	color: #333;
 	text-align: center;
+	letter-spacing: -0.5px;
 }
 
 .form {
@@ -89,6 +90,14 @@
 	}
 }
 
+.passwordFields {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	width: 100%;
+	z-index: 1;
+}
+
 .inputGroup {
 	flex: 1;
 	position: relative;
@@ -100,6 +109,7 @@
 	color: #555;
 	margin-bottom: 6px;
 	display: block;
+	letter-spacing: 0.3px;
 }
 
 .inputWithIcon {
@@ -113,7 +123,7 @@
 	left: 12px;
 	width: 18px;
 	height: 18px;
-	stroke: #5442ff;
+	stroke: #0875b7;
 	stroke-width: 2;
 	fill: none;
 	z-index: 1;
@@ -123,23 +133,23 @@
 .inputField {
 	width: 100%;
 	height: 46px;
-	padding: 0 16px 0 42px; /* Add left padding for the icon */
+	padding: 0 16px 0 42px;
 	border-radius: 10px;
 	border: 1px solid #e0e0e0;
 	background-color: #f9f9f9;
 	font-family: inherit;
 	font-size: 15px;
 	color: #333;
-	transition: all 0.2s ease;
+	transition: all 0.3s ease;
 
 	&:focus {
 		outline: none;
-		border-color: #5442ff;
+		border-color: #00b1eb;
 		background-color: #fff;
-		box-shadow: 0 0 0 3px rgba(84, 66, 255, 0.1);
+		box-shadow: 0 0 0 3px rgba(0, 177, 235, 0.1);
 
 		& + .inputIcon {
-			stroke: #5442ff;
+			stroke: #00b1eb;
 		}
 	}
 
@@ -171,7 +181,7 @@
 	}
 
 	&:hover svg {
-		stroke: #5442ff;
+		stroke: #0875b7;
 	}
 }
 
@@ -202,7 +212,7 @@
 	font-size: 15px;
 	border: none;
 	cursor: pointer;
-	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	transition: all 0.3s ease;
 	padding: 0 24px;
 	flex: 1;
 
@@ -215,7 +225,7 @@
 }
 
 .cancelButton {
-	background-color: #f5f5f5;
+	background-color: #f5f7fa;
 	color: #666;
 
 	svg {
@@ -223,7 +233,7 @@
 	}
 
 	&:hover {
-		background-color: #eaeaea;
+		background-color: #e0f0fa;
 		transform: translateY(-2px);
 	}
 
@@ -233,23 +243,24 @@
 }
 
 .saveButton {
-	background: linear-gradient(135deg, #5442ff 0%, #ca7df9 100%);
+	background: linear-gradient(135deg, #0875b7 0%, #00b1eb 100%);
 	color: white;
-	box-shadow: 0 4px 8px rgba(84, 66, 255, 0.2);
+	box-shadow: 0 4px 10px rgba(0, 177, 235, 0.25);
 
 	svg {
 		stroke: white;
 	}
 
 	&:hover {
-		opacity: 0.95;
+		background: linear-gradient(135deg, #0875b7 0%, #00b1eb 100%);
+		opacity: 0.9;
+		box-shadow: 0 6px 12px rgba(0, 177, 235, 0.35);
 		transform: translateY(-2px);
-		box-shadow: 0 6px 12px rgba(84, 66, 255, 0.3);
 	}
 
 	&:active {
 		transform: translateY(0);
-		box-shadow: 0 4px 8px rgba(84, 66, 255, 0.2);
+		box-shadow: 0 2px 8px rgba(0, 177, 235, 0.25);
 	}
 }
 
@@ -281,7 +292,7 @@
 
 /* Form focus states with animated highlight */
 .inputWithIcon:focus-within .inputIcon {
-	stroke: #5442ff;
+	stroke: #00b1eb;
 	animation: pulse 1s infinite alternate;
 }
 
@@ -365,4 +376,127 @@
 
 .profileImageContainer:hover .editOverlay {
 	transform: scale(1.1);
+}
+
+/* Phone Input & Country Code Selector Styles */
+.phoneInputGroup {
+	position: relative;
+	z-index: 2;
+}
+
+.countryCodeSelector {
+	position: relative;
+	width: auto;
+	margin-right: 10px;
+	z-index: 2;
+}
+
+.selectedCountry {
+	display: flex;
+	align-items: center;
+	height: 46px;
+	padding: 0 12px;
+	background-color: #f9f9f9;
+	border: 1px solid #e0e0e0;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		border-color: #00b1eb;
+	}
+}
+
+.flag {
+	width: 24px;
+	height: 18px;
+	object-fit: cover;
+	margin-right: 6px;
+	border-radius: 2px;
+}
+
+.dialCode {
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
+	margin-right: 6px;
+}
+
+.arrow {
+	font-size: 10px;
+	color: #777;
+}
+
+.countryDropdown {
+	position: absolute;
+	top: 50px;
+	left: 0;
+	width: 260px;
+	max-height: 200px;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	z-index: 10;
+	overflow: hidden;
+	animation: fadeIn 0.2s ease;
+}
+
+.searchContainer {
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.searchInput {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	font-size: 14px;
+
+	&:focus {
+		outline: none;
+		border-color: #00b1eb;
+	}
+}
+
+.countriesList {
+	max-height: 240px;
+	overflow-y: auto;
+}
+
+.countryItem {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: #f5f5f5;
+	}
+}
+
+.countryName {
+	flex: 1;
+	font-size: 14px;
+	margin: 0 8px;
+	color: #333;
+}
+
+/* Phone input with country code */
+.inputWithIcon {
+	position: relative;
+	display: flex;
+	align-items: center;
+
+	/* Adjust phone input padding when used with country code */
+	&:has(.countryCodeSelector) {
+		.inputIcon {
+			left: 50px; /* Adjust based on your design */
+		}
+
+		.inputField {
+			padding-left: 80px; /* Adjust based on your design */
+		}
+	}
 }

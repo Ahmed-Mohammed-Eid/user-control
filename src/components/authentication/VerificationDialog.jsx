@@ -45,9 +45,19 @@ const VerificationDialog = ({ isOpen, onVerify, onResend, phone }) => {
 		return `${mins}:${secs.toString().padStart(2, "0")}`;
 	};
 
+	// Generate array for bubble elements
+	const bubbles = Array.from({ length: 10 }, (_, i) => i + 1);
+
 	return (
 		<div className={`${styles.overlay} ${isOpen ? styles.open : ""}`}>
+			{isOpen &&
+				bubbles.map((i) => (
+					<div key={i} className={styles[`bubble-${i}`]}></div>
+				))}
 			<div className={styles.dialog}>
+				<div className={styles.logoSmall}>
+					<img src="/logo.png" alt="Company Logo" />
+				</div>
 				<h2 className={styles.title}>Verify Your Phone Number</h2>
 				<p className={styles.description}>
 					We sent a verification code to your WhatsApp number{" "}
@@ -89,6 +99,8 @@ const VerificationDialog = ({ isOpen, onVerify, onResend, phone }) => {
 						Resend code in {formatTime(timer)}
 					</div>
 				)}
+
+				<div className={styles.wave}></div>
 			</div>
 		</div>
 	);

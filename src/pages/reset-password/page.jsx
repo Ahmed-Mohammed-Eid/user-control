@@ -12,6 +12,9 @@ import {
 } from "../../schemas/reset-password-schema";
 import axios from "axios";
 
+// Import the Inter font
+import "../../styles/fonts.css";
+
 const ResetPassword = () => {
 	const [step, setStep] = useState("phone"); // phone, verification, reset
 	const [phone, setPhone] = useState("");
@@ -103,66 +106,138 @@ const ResetPassword = () => {
 			});
 	};
 
+	const customStyles = {
+		fontFamily:
+			"'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+	};
+
 	return (
-		<div className={styles.body}>
+		<div className={styles.body} style={customStyles}>
+			<div className={styles.floatingShape1}></div>
+			<div className={styles.floatingShape2}></div>
+			<div className={styles.floatingShape3}></div>
 			<div className={styles.loginContainer}>
 				<div className={styles.loginForm}>
+					<div className={styles.logoContainer}>
+						<img
+							src="/logo.png"
+							alt="Company Logo"
+							className={styles.logo}
+						/>
+					</div>
+
 					{step === "phone" && (
 						<form onSubmit={handlePhoneSubmit(onPhoneSubmit)}>
-							<h1>Reset Password 🔐</h1>
+							<h1
+								style={{
+									fontWeight: 700,
+									letterSpacing: "-0.5px",
+								}}
+							>
+								Reset Password 🔐
+							</h1>
 							<p>
 								Enter your phone number to receive a
 								verification code.
 							</p>
 
 							<div className={styles.formGroup}>
-								<label htmlFor="phone">Phone Number</label>
+								<label
+									htmlFor="phone"
+									style={{
+										fontWeight: 500,
+										letterSpacing: "0.3px",
+									}}
+								>
+									Phone Number
+								</label>
 								<input
 									{...registerPhone("phone")}
 									type="tel"
 									id="phone"
 									placeholder="+201234567890"
+									style={{ fontFamily: "inherit" }}
 								/>
 								{phoneErrors.phone && (
-									<span className={styles.errorMessage}>
+									<span
+										className={styles.errorMessage}
+										style={{ fontWeight: 500 }}
+									>
 										{phoneErrors.phone.message}
 									</span>
 								)}
 							</div>
 
-							<button type="submit" className={styles.signinBtn}>
+							<button
+								type="submit"
+								className={styles.signinBtn}
+								style={{
+									fontWeight: 600,
+									fontFamily: "inherit",
+								}}
+							>
 								Send Code
 							</button>
 
 							<div className={styles.signupLink}>
 								Remember your password?{" "}
-								<Link to="/auth/login">Sign in</Link>
+								<Link
+									to="/auth/login"
+									style={{ fontWeight: 600 }}
+								>
+									Sign in
+								</Link>
 							</div>
 						</form>
 					)}
 
 					{step === "reset" && (
 						<form onSubmit={handlePasswordSubmit(onResetSubmit)}>
-							<h1>Create New Password 🔐</h1>
+							<h1
+								style={{
+									fontWeight: 700,
+									letterSpacing: "-0.5px",
+								}}
+							>
+								Create New Password 🔐
+							</h1>
 							<p>Enter your new password below.</p>
 
 							<div className={styles.formGroup}>
-								<label htmlFor="password">New Password</label>
+								<label
+									htmlFor="password"
+									style={{
+										fontWeight: 500,
+										letterSpacing: "0.3px",
+									}}
+								>
+									New Password
+								</label>
 								<input
 									{...registerPassword("password")}
 									type="password"
 									id="password"
 									placeholder="Enter new password"
+									style={{ fontFamily: "inherit" }}
 								/>
 								{passwordErrors.password && (
-									<span className={styles.errorMessage}>
+									<span
+										className={styles.errorMessage}
+										style={{ fontWeight: 500 }}
+									>
 										{passwordErrors.password.message}
 									</span>
 								)}
 							</div>
 
 							<div className={styles.formGroup}>
-								<label htmlFor="confirmPassword">
+								<label
+									htmlFor="confirmPassword"
+									style={{
+										fontWeight: 500,
+										letterSpacing: "0.3px",
+									}}
+								>
 									Confirm Password
 								</label>
 								<input
@@ -170,15 +245,26 @@ const ResetPassword = () => {
 									type="password"
 									id="confirmPassword"
 									placeholder="Confirm new password"
+									style={{ fontFamily: "inherit" }}
 								/>
 								{passwordErrors.confirmPassword && (
-									<span className={styles.errorMessage}>
+									<span
+										className={styles.errorMessage}
+										style={{ fontWeight: 500 }}
+									>
 										{passwordErrors.confirmPassword.message}
 									</span>
 								)}
 							</div>
 
-							<button type="submit" className={styles.signinBtn}>
+							<button
+								type="submit"
+								className={styles.signinBtn}
+								style={{
+									fontWeight: 600,
+									fontFamily: "inherit",
+								}}
+							>
 								Reset Password
 							</button>
 						</form>

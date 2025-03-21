@@ -13,9 +13,7 @@ const Home = lazy(() => import("./pages/home/page"));
 const ChangePassword = lazy(() => import("./pages/change-password/page"));
 const UpdateUserForm = lazy(() => import("./pages/update-user-form/page"));
 const InsertEmployeesPage = lazy(() => import("./pages/insert-employees/page"));
-
-// #3) LAYOUT
-import CanvasCursor from "./components/shared/CanvasCursor";
+const Recharge = lazy(() => import("./components/main/payment/Recharge"));
 
 // STYLES
 import "./App.css";
@@ -49,10 +47,10 @@ function App() {
 							path="/insert-employees"
 							element={<InsertEmployeesPage />}
 						/>
+						<Route path="/recharge" element={<Recharge />} />
 					</Routes>
 				</Suspense>
 			</HashRouter>
-			<CanvasCursor />
 		</>
 	);
 }

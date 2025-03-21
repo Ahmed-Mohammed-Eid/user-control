@@ -4,6 +4,9 @@ import styles from "./UserCard.module.scss";
 // NAVIGATE
 import { useNavigate } from "react-router";
 
+// Import fonts
+import "../../../styles/fonts.css";
+
 const UserProfileCard = ({
 	userName = "Rene Xavier",
 	balance = "$2,450.00",

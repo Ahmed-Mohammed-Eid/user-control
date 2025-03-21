@@ -70,8 +70,18 @@ const LoginPage = () => {
 
 	return (
 		<div className={styles.body}>
+			<div className={styles.floatingShape1}></div>
+			<div className={styles.floatingShape2}></div>
+			<div className={styles.floatingShape3}></div>
 			<div className={styles.loginContainer}>
 				<div className={styles.loginForm}>
+					<div className={styles.logoContainer}>
+						<img
+							src="/logo.png"
+							alt="Company Logo"
+							className={styles.logo}
+						/>
+					</div>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<h1>Welcome Back 👋</h1>
 						<p>
@@ -120,7 +130,6 @@ const LoginPage = () => {
 							className={styles.signinBtn}
 							disabled={isSubmitting}
 						>
-							{/* {isSubmitting ? "Signing in..." : "Sign in"} */}
 							{isSubmitting ? <Spinner /> : "Sign in"}
 						</button>
 

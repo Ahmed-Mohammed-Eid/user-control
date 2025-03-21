@@ -1,0 +1,228 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+// PaymentForm.module.scss
+@keyframes float {
+	0% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+.container {
+	background-image: linear-gradient(
+		135deg,
+		#f5f7fa 0%,
+		#e0f0fa 50%,
+		#d7f0ff 100%
+	);
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+	font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	position: relative;
+	overflow: hidden;
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230875b7' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+		opacity: 0.5;
+		z-index: 0;
+	}
+}
+
+.paymentCard {
+	max-width: 28rem;
+	width: 100%;
+	background-color: white;
+	padding: 2rem;
+	border-radius: 1rem;
+	box-shadow: 0 15px 30px rgba(8, 117, 183, 0.15);
+	margin: 0 auto;
+	position: relative;
+	z-index: 1;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 2rem;
+}
+
+.title {
+	font-size: 1.875rem;
+	font-weight: 700;
+	color: #333;
+	margin-bottom: 0.5rem;
+	letter-spacing: -0.5px;
+}
+
+.subtitle {
+	color: #666;
+	font-weight: 500;
+	letter-spacing: 0.3px;
+}
+
+.cardPreview {
+	position: relative;
+	height: 12rem;
+	background: linear-gradient(135deg, #0875b7 0%, #00b1eb 100%);
+	border-radius: 0.75rem;
+	padding: 1.5rem;
+	color: white;
+	margin-bottom: 2rem;
+	box-shadow: 0 4px 10px rgba(0, 177, 235, 0.25);
+}
+
+.floatAnimation {
+	animation: float 3s ease-in-out infinite;
+}
+
+.cardLogo {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+}
+
+.cardIcon {
+	height: 2rem;
+}
+
+.cardDetails {
+	margin-top: 4rem;
+}
+
+.cardNumber {
+	font-size: 1.25rem;
+	letter-spacing: 0.1em;
+	margin-bottom: 0.5rem;
+}
+
+.cardMeta {
+	display: flex;
+	justify-content: space-between;
+}
+
+.cardLabel {
+	position: absolute;
+	left: 1rem;
+	top: 0.75rem;
+	color: #666;
+	transition: all 0.3s ease;
+	pointer-events: none;
+	font-size: 0.875rem;
+	font-weight: 500;
+	letter-spacing: 0.3px;
+	background-color: transparent;
+	padding: 0 0.25rem;
+}
+
+.cardValue {
+	font-size: 0.875rem;
+}
+
+.form {
+	margin-top: 2rem;
+}
+
+.inputGroup {
+	position: relative;
+	margin-bottom: 1.5rem;
+}
+
+.cardInput {
+	display: block;
+	width: 100%;
+	padding: 0.75rem 1rem;
+	border: 1px solid #e0e0e0;
+	border-radius: 0.5rem;
+	outline: none;
+	transition: all 0.3s ease;
+
+	&:focus {
+		border-color: #00b1eb;
+		box-shadow: 0 0 0 3px rgba(0, 177, 235, 0.1);
+	}
+
+	&::placeholder {
+		color: transparent;
+	}
+
+	&:focus ~ .cardLabel,
+	&:not(:placeholder-shown) ~ .cardLabel {
+		transform: translateY(-1.5rem);
+		font-size: 0.75rem;
+		background-color: white;
+		color: #0875b7;
+		font-weight: 600;
+	}
+
+	&:focus ~ .cardLabel {
+		color: #0875b7;
+	}
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+
+.submitButton {
+	position: relative;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 0.75rem 1rem;
+	border: none;
+	border-radius: 0.5rem;
+	color: white;
+	background: linear-gradient(135deg, #0875b7 0%, #00b1eb 100%);
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 10px rgba(0, 177, 235, 0.25);
+
+	&:hover {
+		opacity: 0.9;
+		box-shadow: 0 6px 12px rgba(0, 177, 235, 0.35);
+		transform: translateY(-2px);
+	}
+
+	&:active {
+		transform: translateY(0);
+		box-shadow: 0 2px 8px rgba(0, 177, 235, 0.25);
+	}
+
+	&:focus {
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(0, 177, 235, 0.3);
+	}
+}
+
+.buttonIcon {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	padding-left: 0.75rem;
+}
+
+.lockIcon {
+	height: 1.25rem;
+	width: 1.25rem;
+	color: rgba(255, 255, 255, 0.9);
+}

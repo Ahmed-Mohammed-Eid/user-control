@@ -70,13 +70,23 @@ const PasswordReset = () => {
 			});
 	};
 
+	// Generate array for bubble elements
+	const bubbles = Array.from({ length: 15 }, (_, i) => i + 1);
+
 	return (
 		<div className={styles.container}>
+			{bubbles.map((i) => (
+				<div key={i} className={styles[`bubble-${i}`]}></div>
+			))}
+			<div className={styles.floatingShape1}></div>
+			<div className={styles.floatingShape2}></div>
+			<div className={styles.floatingShape3}></div>
 			<div className={styles.card}>
-				<div className={styles.illustration}>
+				<div className={styles.logoContainer}>
 					<img
-						src={"/undraw_version-control_e4yu.svg"}
-						alt="Password Reset Illustration"
+						src="/logo.png"
+						alt="Company Logo"
+						className={styles.logo}
 					/>
 				</div>
 				<h1 className={styles.title}>Reset Password</h1>
@@ -119,6 +129,7 @@ const PasswordReset = () => {
 							<input
 								type="password"
 								id="confirmPassword"
+								placeholder="Confirm your new password"
 								{...register("confirmPassword")}
 								className={
 									errors.confirmPassword
@@ -142,6 +153,10 @@ const PasswordReset = () => {
 						</button>
 					</form>
 				)}
+				<div className={styles.linkToLogin}>
+					Remember your password? <a href="/auth/login">Sign in</a>
+				</div>
+				<div className={styles.wave}></div>
 			</div>
 		</div>
 	);
