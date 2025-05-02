@@ -8,9 +8,9 @@ import { useNavigate } from "react-router";
 import "../../../styles/fonts.css";
 
 const UserProfileCard = ({
-	userName = "Rene Xavier",
-	balance = "$2,450.00",
-	profileImage = "/api/placeholder/90/90",
+	userName = "",
+	balance = "",
+	profileImage = "",
 	enableAddButton = false,
 	enableUpdateButton = true,
 	enableRechargeButton = true,
@@ -47,6 +47,7 @@ const UserProfileCard = ({
 					{enableRechargeButton && (
 						<button
 							className={`${styles.actionButton} ${styles.primary}`}
+							onClick={() => navigate("/recharge")}
 						>
 							<svg
 								viewBox="0 0 24 24"

@@ -3,8 +3,12 @@ import React, { useState } from "react";
 import styles from "./Recharge.module.scss";
 // Import fonts
 import "../../../styles/fonts.css";
+// NAVIGATION
+import { useNavigate } from "react-router";
 
 const Recharge = () => {
+	const navigate = useNavigate();
+
 	const [cardDetails, setCardDetails] = useState({
 		cardHolder: "",
 		cardNumber: "",
@@ -172,24 +176,38 @@ const Recharge = () => {
 						</div>
 					</div>
 
-					<button type="submit" className={styles.submitButton}>
-						<span className={styles.buttonIcon}>
-							<svg
-								className={styles.lockIcon}
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-								/>
-							</svg>
-						</span>
-						Pay Now
-					</button>
+					<div className={styles.buttonGroup}>
+						<button
+							type="button"
+							className={`${styles.button} ${styles.backButton}`}
+							onClick={() => {
+								navigate(-1);
+							}}
+						>
+							Back
+						</button>
+						<button
+							type="submit"
+							className={`${styles.button} ${styles.submitButton}`}
+						>
+							<span className={styles.buttonIcon}>
+								<svg
+									className={styles.lockIcon}
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth="2"
+										d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+									/>
+								</svg>
+							</span>
+							Pay Now
+						</button>
+					</div>
 				</form>
 			</div>
 		</div>

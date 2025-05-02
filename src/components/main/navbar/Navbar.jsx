@@ -22,6 +22,10 @@ const Navbar = () => {
 	}, [navigate]);
 	// REDIRECT TO LOGIN PAGE FUNCTION
 	const redirectToLogin = useCallback(() => {
+		// CLEAR LOCAL STORAGE
+		localStorage.clear();
+		// NAVIGATE TO LOGIN PAGE
+
 		navigate("/auth/login");
 	}, [navigate]);
 

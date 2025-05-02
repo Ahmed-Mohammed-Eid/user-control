@@ -44,6 +44,7 @@ const LoginPage = () => {
 					const loginFlag = responseObj.login_flag;
 					// SAVE THE LOGIN FLAG IN LOCAL STORAGE
 					localStorage.setItem("loginFlag", responseObj.login_flag);
+					localStorage.setItem("userName", data?.phone?.replace("+", ""));
 					// VALIDATION
 					if (loginFlag === 0) {
 						// NAVIGATE TO CHANGE PASSWORD PAGE

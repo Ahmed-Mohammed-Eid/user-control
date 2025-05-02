@@ -1,4 +1,4 @@
-import React from "react";
+import {useCallback, useEffect, useState} from "react";
 import styles from "./page.module.scss";
 
 // Import fonts
@@ -9,81 +9,53 @@ import Navbar from "../../components/main/navbar/Navbar";
 import UserProfileCard from "../../components/main/usercard/UserCard";
 
 function Page() {
+
+	// STATES
+	const [userData, setUserData] = useState([]);
+
+
+	const getUserData = useCallback(async () => {
+		// GET USER NAME FROM LOCAL STORAGE
+		const userName = localStorage.getItem("userName");
+
+		if(!userName) {
+			window.alert("User not found. Please log in again.");
+			// If userName is not found, return an empty array
+			return [];
+		}
+
+		// Fetch user data from the API
+		const response = await fetch(`http://64.251.10.84:8181/ords/charge/CUSTOMERS_home/CUSTOMERS_home?prm=${userName}`);
+		const data = await response.json();
+
+		return data?.items ? data.items : [];
+	}, []);
+
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const data = await getUserData();
+			// Update state with fetched data
+			setUserData(data);
+		};
+		fetchData();
+	}, [getUserData]);
+
 	return (
 		<div className={styles.container}>
 			<Navbar />
 			<div className={styles.Cards}>
-				<UserProfileCard
-					balance="$3,250.00"
-					userName="John Smith"
-					profileImage="/P1.jpg"
-				/>
 
-				<UserProfileCard
-					balance="$1,875.50"
-					userName="Emily Chen"
-					profileImage="/P2.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$4,120.75"
-					userName="Michael Johnson"
-					profileImage="/P3.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
-
-				<UserProfileCard
-					balance="$2,980.25"
-					userName="Sarah Williams"
-					profileImage="/P4.jpg"
-				/>
+				{
+					userData.map((user, index) => (
+						<UserProfileCard
+							key={index}
+							balance={user?.balance}
+							userName={user?.customer_name_en}
+							profileImage={user?.img || '/404.png'}
+						/>
+					))
+				}
 			</div>
 		</div>
 	);

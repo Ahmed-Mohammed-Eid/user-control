@@ -20,7 +20,7 @@ const UpdateUserForm = ({
 		fullNameAr: "رينيه اكسافييه",
 		email: "rene.xavier@example.com",
 		phoneNumber: "+1 (555) 123-4567",
-		profileImage: "/api/placeholder/90/90",
+		profileImage: "/P1.jpg",
 	},
 	onSubmit,
 }) => {
