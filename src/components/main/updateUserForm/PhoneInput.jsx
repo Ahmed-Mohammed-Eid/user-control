@@ -4,7 +4,7 @@ import styles from "../updateUserForm/UpdateUserForm.module.scss";
 // Import fonts
 import "../../../styles/fonts.css";
 
-const PhoneInput = ({ register, errors, value, onChange }) => {
+const PhoneInput = ({ register, errors, value, onChange, disabled }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedCountry, setSelectedCountry] = useState(null);
@@ -133,7 +133,11 @@ const PhoneInput = ({ register, errors, value, onChange }) => {
 			<div className={styles.countryCodeSelector}>
 				<div
 					className={styles.selectedCountry}
-					onClick={() => setIsOpen(!isOpen)}
+					onClick={() => {
+						if (disabled) return;
+
+						setIsOpen(!isOpen)
+					}}
 				>
 					{selectedCountry && (
 						<>
@@ -201,6 +205,7 @@ const PhoneInput = ({ register, errors, value, onChange }) => {
 					errors.phoneNumber ? styles.error : ""
 				}`}
 				placeholder="Phone number"
+				disabled={disabled}
 			/>
 		</div>
 	);

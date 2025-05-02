@@ -45,13 +45,14 @@ const LoginPage = () => {
 					// SAVE THE LOGIN FLAG IN LOCAL STORAGE
 					localStorage.setItem("loginFlag", responseObj.login_flag);
 					localStorage.setItem("userName", data?.phone?.replace("+", ""));
+					localStorage.setItem("isAuth", "true");
 					// VALIDATION
 					if (loginFlag === 0) {
 						// NAVIGATE TO CHANGE PASSWORD PAGE
 						navigate("/auth/change-password");
 					} else {
 						// NAVIGATE TO MAIN PAGE
-						navigate("/?isAuth=true");
+						navigate("/");
 					}
 				} else {
 					setError("phone", {

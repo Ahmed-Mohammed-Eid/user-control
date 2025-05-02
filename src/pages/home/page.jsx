@@ -68,6 +68,7 @@ function Page() {
 							balance={user?.balance}
 							userName={user?.customer_name_en}
 							profileImage={user?.img || '/404.png'}
+							user={user}
 						/>
 					))
 				}

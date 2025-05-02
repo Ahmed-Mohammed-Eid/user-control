@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./UpdateUserForm.module.scss";
 // REACT HOOK FORM
 import { useForm } from "react-hook-form";
@@ -16,11 +16,11 @@ import PhoneInput from "./PhoneInput";
 
 const UpdateUserForm = ({
 	initialData = {
-		fullNameEn: "Rene Xavier",
-		fullNameAr: "رينيه اكسافييه",
-		email: "rene.xavier@example.com",
-		phoneNumber: "+1 (555) 123-4567",
-		profileImage: "/P1.jpg",
+		fullNameEn: "",
+		fullNameAr: "",
+		email: "",
+		phoneNumber: "",
+		profileImage: "/404.png",
 	},
 	onSubmit,
 }) => {
@@ -35,6 +35,7 @@ const UpdateUserForm = ({
 		register,
 		handleSubmit,
 		formState: { errors },
+		setValue,
 	} = useForm({
 		resolver: zodResolver(updateUserSchema),
 		defaultValues: initialData,
@@ -59,6 +60,37 @@ const UpdateUserForm = ({
 		setCountryCode(code);
 		console.log("Country code changed to:", code);
 	};
+
+
+	const getUserData = useCallback(async () => {
+		// GET USER NAME FROM LOCAL STORAGE
+		const userName = localStorage.getItem("userName");
+
+		if (!userName) {
+			window.alert("User not found. Please log in again.");
+			// If userName is not found, return an empty array
+			return [];
+		}
+
+		// Fetch user data from the API
+		const response = await fetch(`http://64.251.10.84:8181/ords/charge/single_cust/single_cust?prm=${userName}`);
+		const data = await response.json();
+
+		return data?.items ? data.items[0] : null;
+	}, []);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const data = await getUserData();
+			// Update state with fetched data
+			// Set form values with fetched data
+			setValue("fullNameEn", data?.customer_name_en || "");
+			setValue("fullNameAr", data?.customer_name_ar || "");
+			setValue("email", data?.email || "");
+			setValue("phoneNumber", data?.mobile || "");
+		};
+		fetchData();
+	}, [getUserData, setValue]);
 
 	return (
 		<div className={styles.formCard}>
@@ -210,6 +242,7 @@ const UpdateUserForm = ({
 							errors={errors}
 							value={countryCode}
 							onChange={handleCountryCodeChange}
+							disabled={true}
 						/>
 						{errors.phoneNumber && (
 							<span className={styles.errorMessage}>

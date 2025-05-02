@@ -14,6 +14,7 @@ const UserProfileCard = ({
 	enableAddButton = false,
 	enableUpdateButton = true,
 	enableRechargeButton = true,
+	user = null,
 }) => {
 	// NAVIGATE
 	const navigate = useNavigate();
@@ -68,7 +69,7 @@ const UserProfileCard = ({
 					{enableUpdateButton && (
 						<button
 							className={styles.actionButton}
-							onClick={() => navigate("/update-user")}
+							onClick={() => navigate(`/update-user?userPhone=${user?.mobile}`)}
 						>
 							<svg
 								viewBox="0 0 24 24"
