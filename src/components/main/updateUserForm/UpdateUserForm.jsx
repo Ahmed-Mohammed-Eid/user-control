@@ -22,13 +22,13 @@ const UpdateUserForm = ({
 		phoneNumber: "",
 		profileImage: "/404.png",
 	},
-	onSubmit,
 }) => {
 	// NAVIGATE
 	const navigate = useNavigate();
 
 	// State for country code
 	const [countryCode, setCountryCode] = useState("+966");
+	const [type, setType] = useState("individual");
 
 	// Use React Hook Form with Zod validation
 	const {
@@ -46,8 +46,7 @@ const UpdateUserForm = ({
 
 	// Handle form submission with React Hook Form
 	const onFormSubmit = (data) => {
-		console.log("Form submitted:", data);
-		onSubmit?.(data);
+		handleUpdateUser(data);
 	};
 
 	// CANCEL
@@ -88,9 +87,59 @@ const UpdateUserForm = ({
 			setValue("fullNameAr", data?.customer_name_ar || "");
 			setValue("email", data?.email || "");
 			setValue("phoneNumber", data?.mobile || "");
+
+			setType(data?.typ);
 		};
 		fetchData();
 	}, [getUserData, setValue]);
+
+		const handleUpdateUser = useCallback(
+		(data) => {
+			const body = {
+				EMAIL: data.email,
+				MOBILE: `${data.phoneNumber}`,
+				IS_ACTIVE: "1",
+			};
+
+			if (data.type !== "cust") {
+				body.COMPANY_NAME_EN = data.fullNameEn;
+				body.COMPANY_NAME_AR = data.fullNameAr;
+				body.USER_PASSWORD = data.password;
+			}
+			if (data.type === "cust") {
+				body.CUSTOMER_NAME_EN = data.fullNameEn;
+				body.CUSTOMER_NAME_AR = data.fullNameAr;
+				body.CUSTOMER_PASSWORD = data.password;
+				body.CREATED_USER = "test";
+				body.COMPANY_ID = "";
+			}
+
+			if(data.password === "") {
+				delete body.USER_PASSWORD;
+				delete body.CUSTOMER_PASSWORD;
+			}
+
+			fetch(
+				`http://64.251.10.84:8181/ords/charge/api/post_cmp_cust?p_type=${
+					type === "cust" ? 1 : 2
+				}`,
+				{
+					method: "PUT",
+					body: JSON.stringify({
+						p_json: body,
+					}),
+				}
+			)
+				.then((response) => response.json())
+				.then(() => {
+
+				})
+				.catch((error) => {
+					console.error("Error:", error);
+				});
+		},
+		[type]
+	);
 
 	return (
 		<div className={styles.formCard}>
