@@ -51,7 +51,7 @@ const LoginPage = () => {
 						navigate("/auth/change-password");
 					} else {
 						// NAVIGATE TO MAIN PAGE
-						navigate("/");
+						navigate("/?isAuth=true");
 					}
 				} else {
 					setError("phone", {

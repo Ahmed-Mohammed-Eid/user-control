@@ -4,11 +4,26 @@ import styles from "./page.module.scss";
 // Import fonts
 import "../../styles/fonts.css";
 
+import { useNavigate } from "react-router";
+
 // Home page component
 import Navbar from "../../components/main/navbar/Navbar";
 import UserProfileCard from "../../components/main/usercard/UserCard";
 
+// Hooks
+import useProtectedRoute from "../../hooks/useProtectedRoute";
+
 function Page() {
+	
+	// NAVIGATION
+	const navigate = useNavigate();
+	
+
+	// Check if the user is authenticated
+	const isAuth = useProtectedRoute();
+	if (!isAuth) {
+		navigate("/auth/login");
+	}
 
 	// STATES
 	const [userData, setUserData] = useState([]);
