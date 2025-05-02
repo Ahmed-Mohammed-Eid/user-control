@@ -105,7 +105,7 @@ const SignupPage = () => {
 			const passwordToBeSent = data.password;
 			const body = {
 				EMAIL: data.email,
-				MOBILE: `${countryCode}${data.phone.replace("+", "")}`,
+				MOBILE: `${countryCode.replace("+", "")}${data.phone.replace("+", "")}`,
 				IS_ACTIVE: "1",
 			};
 
@@ -114,6 +114,7 @@ const SignupPage = () => {
 				body.COMPANY_NAME_AR = data.companyNameAr;
 				body.USER_PASSWORD = data.password;
 			}
+
 			if (data.type === "individual") {
 				body.CUSTOMER_NAME_EN = data.fullNameEn;
 				body.CUSTOMER_NAME_AR = data.fullNameAr;

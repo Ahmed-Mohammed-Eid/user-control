@@ -124,7 +124,7 @@ const UpdateUserForm = ({
 					type === "cust" ? 1 : 2
 				}`,
 				{
-					method: "PUT",
+					method: "POST",
 					body: JSON.stringify({
 						p_json: body,
 					}),
