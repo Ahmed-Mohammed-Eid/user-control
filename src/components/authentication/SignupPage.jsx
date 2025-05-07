@@ -88,7 +88,10 @@ const SignupPage = () => {
 			setShowVerification(true);
 
 			// PHONE WITH COUNTRY CODE
-			const countryPhone = `${countryCode}${data.phone.replace("+", "")}`;
+			const phoneWithoutFirstZero = data.phone.replace(/^0/, "");
+
+
+			const countryPhone = `${countryCode}${phoneWithoutFirstZero}`;
 			console.log("Country phone:", countryPhone);
 
 			// SEND CODE TO WHATSAPP
@@ -140,10 +143,7 @@ const SignupPage = () => {
 				.then((response) => response.json())
 				.then(() => {
 					// COUNTRY PHONE
-					const countryPhone = `${countryCode}${phoneNumberForWhatsapp.replace(
-						"+",
-						""
-					)}`;
+					const countryPhone = `${countryCode}${phoneNumberForWhatsapp}`;
 
 					console.log("countryPhone", countryPhone);
 
@@ -419,7 +419,7 @@ const SignupPage = () => {
 												{...register("fullNameEn")}
 												type="text"
 												id="fullNameEn"
-												placeholder="Enter your full name in English"
+												placeholder="الاسم بالإنجليزي"
 											/>
 											{errors.fullNameEn && (
 												<span
@@ -440,7 +440,7 @@ const SignupPage = () => {
 												{...register("fullNameAr")}
 												type="text"
 												id="fullNameAr"
-												placeholder="Enter your full name in Arabic"
+												placeholder="الاسم بالعربي"
 												dir="rtl"
 											/>
 											{errors.fullNameAr && (
@@ -487,7 +487,7 @@ const SignupPage = () => {
 									{...register("email")}
 									type="email"
 									id="email"
-									placeholder="example@email.com"
+									placeholder="البريد الإلكتروني"
 								/>
 								{errors.email && (
 									<span className={styles.errorMessage}>
@@ -503,7 +503,7 @@ const SignupPage = () => {
 										{...register("password")}
 										type="password"
 										id="password"
-										placeholder="At least 8 characters"
+										placeholder="على الأقل 8 أحرف"
 									/>
 									{errors.password && (
 										<span className={styles.errorMessage}>
@@ -520,7 +520,7 @@ const SignupPage = () => {
 										{...register("confirmPassword")}
 										type="password"
 										id="confirmPassword"
-										placeholder="Confirm your password"
+										placeholder="تأكيد كلمة المرور"
 									/>
 									{errors.confirmPassword && (
 										<span className={styles.errorMessage}>

@@ -97,7 +97,7 @@ const LoginPage = () => {
 								{...register("phone")}
 								type="tel"
 								id="phone"
-								placeholder="+20123456789"
+								placeholder="20123456789"
 							/>
 							{errors.phone && (
 								<span className={styles.errorMessage}>
@@ -112,7 +112,7 @@ const LoginPage = () => {
 								{...register("password")}
 								type="password"
 								id="password"
-								placeholder="At least 8 characters"
+								placeholder="كلمة المرور"
 							/>
 							{errors.password && (
 								<span className={styles.errorMessage}>

@@ -12,7 +12,7 @@ export const signupSchema = z
 		phone: z
 			.string()
 			.min(1, { message: "Phone number is required" })
-			.regex(/^\+?[0-9]{10,}$/, { message: "Invalid phone number" }),
+			.regex(/^\+?[0-9]{0,}$/, { message: "Invalid phone number" }),
 		email: z
 			.string()
 			.min(1, { message: "Email is required" })

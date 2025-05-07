@@ -25,7 +25,7 @@ const PhoneInput = ({
 			<input
 				type="tel"
 				id="phone"
-				placeholder="رقم الهاتف"
+				placeholder="رقم الجوال"
 				{...register("phone")}
 				className={`${styles.phoneInput} ${
 					errors.phone ? styles.inputError : ""
